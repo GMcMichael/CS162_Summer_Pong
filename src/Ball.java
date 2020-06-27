@@ -78,11 +78,11 @@ public class Ball {
             setY(Canvas.getHeight() - radius);
         }
         if((getX() - radius) <= 0) {
-            Canvas.score(true);
+            Canvas.score(false);
             reset();
         }
         else if((getX() + radius ) >= Canvas.getWidth()){
-            Canvas.score(false);
+            Canvas.score(true);
             reset();
         }
     }

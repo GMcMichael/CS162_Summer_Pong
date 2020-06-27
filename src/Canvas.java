@@ -1,17 +1,18 @@
 import processing.core.PApplet;
 import processing.core.PFont;
-
-import java.awt.*;
+import java.awt.Color;
 import java.util.ArrayList;
 
 public class Canvas extends PApplet{
 
+    private static boolean AI;
+    private static boolean darkMode;
     private static int width = 500;
     private static int height = 500;
     private static Paddle p1, p2;
     private ArrayList<Paddle> paddles = new ArrayList<Paddle>();
     private static Ball ball;
-    private boolean altBounce;
+    private static boolean altBounce;
     private static int baseBallDiameter = 10;
     private static int baseBallXVelocity = -2;
     private static int baseBallYVelocity = 0;
@@ -37,11 +38,17 @@ public class Canvas extends PApplet{
     }
 
     public void draw() {
-        background(255);
-        fill(Color.BLACK.getRGB());
+        if(darkMode){
+            background(0);
+            fill(Color.WHITE.getRGB());
+        }
+        else {
+            background(255);
+            fill(Color.BLACK.getRGB());
+        }
         text(p1Wins, ((width/2)-(width/10)), (height/10));
         text(p2Wins, ((width/2)+(width/10)), (height/10));
-        p2.followBall();
+        if(AI) p2.followBall();
         p1.draw();
         p2.draw();
         ball.draw();
@@ -51,11 +58,19 @@ public class Canvas extends PApplet{
     public void keyPressed(){
         if(key == 'w') p1.setMovingUp(true);
         if(key == 's') p1.setMovingDown(true);
+        if(!AI){
+            if(key == 'k') p2.setMovingUp(true);
+            if(key == 'm') p2.setMovingDown(true);
+        }
     }
 
     public void keyReleased() {
         if(key == 'w') p1.setMovingUp(false);
         if(key == 's') p1.setMovingDown(false);
+        if(!AI){
+            if(key == 'k') p2.setMovingUp(false);
+            if(key == 'm') p2.setMovingDown(false);
+        }
     }
 
     private void checkCollisions(){
@@ -68,7 +83,6 @@ public class Canvas extends PApplet{
             else if(y > paddle.getBottom()) y = paddle.getBottom();
             double dist = Math.sqrt( (Math.pow((ball.getX() - x), 2) + Math.pow((ball.getY() - y), 2)) );
             if(dist <= ball.getRadius()) {
-                //altBounce = true;
                 if (altBounce) ball.paddleCollision(paddle, x, y);
                 else ball.paddleCollision(paddle);
             }
@@ -98,5 +112,29 @@ public class Canvas extends PApplet{
 
     public static int getHeight() {
         return height;
+    }
+
+    public static boolean isAltBounce() {
+        return altBounce;
+    }
+
+    public static void setAltBounce(boolean altBounce) {
+        Canvas.altBounce = altBounce;
+    }
+
+    public static boolean isDarkMode() {
+        return darkMode;
+    }
+
+    public static void setDarkMode(boolean darkMode) {
+        Canvas.darkMode = darkMode;
+    }
+
+    public static boolean isAI() {
+        return AI;
+    }
+
+    public static void setAI(boolean AI) {
+        Canvas.AI = AI;
     }
 }
